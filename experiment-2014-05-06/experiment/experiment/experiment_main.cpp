@@ -1,10 +1,14 @@
 #include <mpi.h>
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <windows.h>
 #include "matrix.h"
 
 #define TAG_MATRIX_PARTITION	0x4560
 
+static char res_filename[50]={0};
+std::ofstream out;
 // Struct of info sending data
 struct SendingInfo
 {
@@ -41,6 +45,8 @@ int main(int argc, char *argv[])
 	int processor_rank  = 0;
 	int processor_count = 0;
 	int ifFilesOpened = 0;
+//useless variable   to attach throgh input           /* just for lulz */
+	//int useless_var_for_input;
 	Matrix freqMatrix;
 	Matrix lengthMatrix;
 	Matrix countMatrix;
@@ -66,11 +72,27 @@ int main(int argc, char *argv[])
 
 	experiment_start = MPI_Wtime()*1000;
 
+
+//useless variable   to attach throgh input           /* just for lulz */
+	/*if (!processor_rank)
+	{
+		std::cout << "Enter any bullshit";
+		std::cin >> useless_var_for_input;
+	}*/
+
+
 	InitializeCriticalSection(&result_flush_lock);
 	InitializeCriticalSection(&time_buf_lock);
 
-	std::cout << "<results_total>\n";
-	std::cout << "\t<rank>" << processor_rank << "</rank>\n";
+	
+	sprintf(res_filename,"Result from _%d.txt", processor_rank);
+
+	out.open(res_filename);
+	
+	//out((const char*)res_filename);
+
+	out << "<results_total>\n";
+	out << "\t<rank>" << processor_rank << "</rank>\n";
 
 	for(i = 0; i < freqMatrix.size(); i++)
 	{
@@ -122,7 +144,7 @@ int main(int argc, char *argv[])
 	DeleteCriticalSection(&result_flush_lock);
 	DeleteCriticalSection(&time_buf_lock);
 
-	std::cout << "</results_total>\n";
+	out << "</results_total>\n";
 
 	return 0;
 }
@@ -155,26 +177,27 @@ DWORD WINAPI Thread_Sender(SendingInfo* data)
 
 	EnterCriticalSection(&result_flush_lock);
 
-	std::cout << "\t<result>\n";
-	std::cout << "\t\t<to>" << data->recepient << "</to>\n";
-	std::cout << "\t\t<send_results>\n";
+	//FILE * file_res = 
+	out << "\t<result>\n";
+	out << "\t\t<to>" << data->recepient << "</to>\n";
+	out << "\t\t<send_results>\n";
 	for(int j = 0; j < data->countRun; j++)
 	{
-		std::cout << "\t\t\t<send_result>\n";
+		out << "\t\t\t<send_result>\n";
 		if ( j < time_mas.size() )
-			std::cout << "\t\t\t\t<time_send>" << time_mas[j] << "</time_send>\n"; 
-		std::cout << "\t\t\t\t<bytes>" << data->size * sizeof(double) << "</bytes>\n";
-		std::cout << "\t\t\t\t<frequency>" << data->freq * sizeof(int) << "</frequency>\n";
-		std::cout << "\t\t\t\t<local_counter>" << j << "</local_counter>\n";
+			out << "\t\t\t\t<time_send>" << time_mas[j] << "</time_send>\n"; 
+		out << "\t\t\t\t<bytes>" << data->size * sizeof(double) << "</bytes>\n";
+		out << "\t\t\t\t<frequency>" << data->freq * sizeof(int) << "</frequency>\n";
+		out << "\t\t\t\t<local_counter>" << j << "</local_counter>\n";
 		if ( j < local_time.size() )
-			std::cout << "\t\t\t\t<local_time>" << local_time[j] << "</local_time>\n";
-		std::cout << "\t\t\t</send_result>\n";
+			out << "\t\t\t\t<local_time>" << local_time[j] << "</local_time>\n";
+		out << "\t\t\t</send_result>\n";
 		if ( j < time_mas.size() )
 			total_send_time += time_mas[j];
 	}
-	std::cout << "\t\t</send_results>\n";
-	std::cout << "\t\t<time_total>" << MPI_Wtime() - t_start + total_send_time << "</time_total>\n";
-	std::cout << "\t</result>\n";
+	out << "\t\t</send_results>\n";
+	out << "\t\t<time_total>" << MPI_Wtime() - t_start + total_send_time << "</time_total>\n";
+	out << "\t</result>\n";
 	
 	threadCount--;
 	LeaveCriticalSection(&result_flush_lock);

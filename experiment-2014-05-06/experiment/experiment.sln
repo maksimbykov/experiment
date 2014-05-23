@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "experiment", "experiment\experiment.vcproj", "{74DFCD1E-16BF-43F7-A524-04B2C1286B23}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exp_analyzer", "..\..\..\..\..\Downloads\qmpiExperimentAnalyzer-7a834fa1844e300568072cfddc4d88800937f21f\exp_analyzer.vcproj", "{A69C3DF7-1E03-3362-B3BC-36881AB9C874}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{74DFCD1E-16BF-43F7-A524-04B2C1286B23}.Debug|Win32.Build.0 = Debug|Win32
 		{74DFCD1E-16BF-43F7-A524-04B2C1286B23}.Release|Win32.ActiveCfg = Release|Win32
 		{74DFCD1E-16BF-43F7-A524-04B2C1286B23}.Release|Win32.Build.0 = Release|Win32
+		{A69C3DF7-1E03-3362-B3BC-36881AB9C874}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A69C3DF7-1E03-3362-B3BC-36881AB9C874}.Debug|Win32.Build.0 = Debug|Win32
+		{A69C3DF7-1E03-3362-B3BC-36881AB9C874}.Release|Win32.ActiveCfg = Release|Win32
+		{A69C3DF7-1E03-3362-B3BC-36881AB9C874}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
